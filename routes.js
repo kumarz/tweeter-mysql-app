@@ -22,29 +22,6 @@ router.get('/ping', tweeterController.ping);
 
 /**
  * @swagger
- * /user/{lastName}:
- *   get:
- *     tags:
- *       - tweeter
- *     description: gets the specific user by lastname.
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: lastName
- *         description: user's lastName
- *         in: path
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: SUCCESS.
- *       500:
- *         description: FAILURE.
- */
-router.get('/user/:lastName', tweeterController.getUser);
-
-/**
- * @swagger
  * /user:
  *   post:
  *     tags:
@@ -94,6 +71,29 @@ router.post('/message', tweeterController.postMessage);
 
 /**
  * @swagger
+ * /user/{lastName}:
+ *   get:
+ *     tags:
+ *       - tweeter
+ *     description: gets the specific user by lastname.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: lastName
+ *         description: user's lastName
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: SUCCESS.
+ *       500:
+ *         description: FAILURE.
+ */
+router.get('/user/:lastName', tweeterController.getUser);
+
+/**
+ * @swagger
  * /messages/{userId}:
  *   get:
  *     tags:
@@ -113,7 +113,86 @@ router.post('/message', tweeterController.postMessage);
  *       500:
  *         description: FAILURE.
  */
-router.get('/messages/:userId', tweeterController.getMessages);
+router.get('/messages/:userName', tweeterController.getMessages);
+
+/**
+ * @swagger
+ * /{userName}/follow/{followUserName}:
+ *   put:
+ *     tags:
+ *       - tweeter
+ *     description: a user follows a specific user.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userName
+ *         description: user's userName
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: followUserName
+ *         description: user's ID that has to be followed.
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: SUCCESS.
+ *       500:
+ *         description: FAILURE.
+ */
+router.put('/:userName/follow/:followUserName', tweeterController.followUser);
+
+/**
+ * @swagger
+ * /{userName}/unfollow/{followUserName}:
+ *   delete:
+ *     tags:
+ *       - tweeter
+ *     description: a user unfollows a specific user.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userName
+ *         description: user's userName
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: followUserName
+ *         description: user's ID that has to be followed.
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: SUCCESS.
+ *       500:
+ *         description: FAILURE.
+ */
+router.delete('/:userName/unfollow/:followUserName', tweeterController.unfollowUser);
+
+/**
+ * @swagger
+ * /connections/{userName}:
+ *   get:
+ *     tags:
+ *       - tweeter
+ *     description: gets the list of followers and following for the speecified userName.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userName
+ *         description: user's userName
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: SUCCESS.
+ *       500:
+ *         description: FAILURE.
+ */
+router.get('/connections/:userName', tweeterController.getConnections);
 
 module.exports = router;
 
@@ -123,9 +202,7 @@ module.exports = router;
  * definitions:
  *   User:
  *     properties:
- *       lastName:
- *         type: string
- *       firstName:
+ *       userName:
  *         type: string
  *       age:
  *         type: integer
@@ -135,7 +212,7 @@ module.exports = router;
  *         type: string
  *   Message:
  *     properties:
- *       userId:
+ *       userName:
  *         type: string
  *       content:
  *         type: string
