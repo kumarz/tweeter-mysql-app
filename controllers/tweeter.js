@@ -106,12 +106,33 @@ exports.getConnections  = function(req, res) {
         return res.status(500).json(error);
         };
         console.log("Number of records retrieved : " + result);
-        var following = result.filter( item => item.userName == req.params.userName).map( aitem => aitem.followingUserName );
-        var followers = result.filter( item => item.followingUserName == req.params.userName).map( aitem => aitem.userName );
+        var followers = result.filter( item => item.userName == req.params.userName).map( aitem => aitem.followingUserName );
+        var following = result.filter( item => item.followingUserName == req.params.userName).map( aitem => aitem.userName );
         var connections = {
           following :  following,
           followers : followers
         };
         return res.status(200).json(connections);
     });
+};
+
+exports.getMostPopularFollower  = function(req, res) {
+    var followersSql = "SELECT followingUserName FROM following WHERE userName = "+ mysql.escape(req.params.userName);
+    dbConnection.query(followersSql, function (error, result) {
+        if (error){
+            return res.status(500).json(error);
+        };
+
+        var followers = result.map( aitem => aitem.followingUserName );
+        dbConnection.query( "SELECT * FROM (SELECT username, count(*) AS count FROM following WHERE userName IN ('"+ followers.join("','") +
+                            "') GROUP BY userName asc) as t WHERE 1=1 HAVING t.count = MAX(t.count)", function(error, result) {
+            if(error){
+                console.log(error);
+                return res.status(500).json(error);
+            }
+    
+            return res.status(200).json(result[0]);
+        });
+    });
+   
 };

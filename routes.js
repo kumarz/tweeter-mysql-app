@@ -194,6 +194,30 @@ router.delete('/:userName/unfollow/:followUserName', tweeterController.unfollowU
  */
 router.get('/connections/:userName', tweeterController.getConnections);
 
+/**
+ * @swagger
+ * /mostPopularFollower/{userName}:
+ *   get:
+ *     tags:
+ *       - tweeter
+ *     description: gets the list of followers and their most popular follower's userName.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: userName
+ *         description: user's userName
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: SUCCESS.
+ *       500:
+ *         description: FAILURE.
+ */
+router.get('/mostPopularFollower/:userName', tweeterController.getMostPopularFollower);
+
+
 module.exports = router;
 
 
