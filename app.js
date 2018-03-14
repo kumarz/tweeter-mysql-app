@@ -51,3 +51,27 @@ app.get('/swagger.json', function(req, res) {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+      res.status( err.code || 500 )
+      .json({
+        status: 'error',
+        message: err
+      });
+    });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500)
+    .json({
+        status: 'error',
+        message: err.message
+    });
+});
